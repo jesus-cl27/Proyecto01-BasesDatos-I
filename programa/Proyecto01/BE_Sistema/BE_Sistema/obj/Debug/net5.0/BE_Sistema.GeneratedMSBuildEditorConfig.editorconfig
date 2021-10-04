@@ -1,0 +1,10 @@
+is_global = true
+build_property.TargetFramework = net5.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.PublishSingleFile = 
+build_property.IncludeAllContentForSelfExtract = 
+build_property._SupportedPlatformList = Android,iOS,Linux,macOS,Windows
+build_property.RootNamespace = BE_Sistema
+build_property.ProjectDir = C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\
