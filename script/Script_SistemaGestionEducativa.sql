@@ -145,7 +145,7 @@ create table Cobro
 	CedulaUsuario bigint not null,
 	MontoTotal int not null,
 	FechaCreacion datetime not null,
-	PRIMARY KEY (Codigo),   --llave primaria
+	PRIMARY KEY (Codigo,MontoTotal),   --llaves primarias
 	FOREIGN KEY (CedulaEstudiante) REFERENCES Estudiante(Cedula),    --llaves foraneas
 	FOREIGN KEY (CodigoMatricula) REFERENCES Matricula(Codigo),    --llaves foraneas
 	FOREIGN KEY (CedulaUsuario) REFERENCES Usuario(Cedula),   --llaves foraneas
@@ -179,6 +179,7 @@ create table DetalleCobroPorGrupo
 	FOREIGN KEY (NumeroPeriodo,AnnoPeriodo) REFERENCES PeriodoLectivo(NumeroPeriodo,Anno), --llaves foraneas
 );
 go
+
 --tabla CuotasPorGrupo
 --no permite nulos
 create table CuotasPorGrupo
@@ -193,3 +194,24 @@ create table CuotasPorGrupo
 	CONSTRAINT chk_MontoCuota CHECK (Monto >= 0),  --se valida que el monto no pueda ser negativo
 	CONSTRAINT chk_EstadoCuota CHECK (Estado = 'Pagado' or Estado = 'Pendiente')  --se valida que el estado solo pueda ser 'Pagado' o 'Pendiente'
 );
+go
+create table MatriculaGrupos
+(
+	CodigoMatricula int not null,
+	CodigoGrupo int not null,
+	PRIMARY KEY (CodigoMatricula,CodigoGrupo),
+	FOREIGN KEY (CodigoMatricula) REFERENCES Matricula(Codigo),
+	FOREIGN KEY (CodigoGrupo) REFERENCES Grupo(Codigo),
+);
+go
+create table Factura
+(
+	CodigoCobro int not null,
+	CedulaUsuario bigint not null,
+	MontoTotalCobro int not null,
+	FechaCreacion datetime not null,
+	PRIMARY KEY (CodigoCobro),
+	FOREIGN KEY (CodigoCobro,MontoTotalCobro) REFERENCES Cobro(Codigo,MontoTotal),
+	FOREIGN KEY (CedulaUsuario) REFERENCES Usuario(Cedula)
+);
+

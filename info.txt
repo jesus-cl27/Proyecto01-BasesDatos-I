@@ -1,0 +1,7 @@
+Nombre del curso                      	Bases de Datos G60
+Número de semestre y año lectivo      	II Semestre, 2021
+Nombre del Estudiante			Jesus Cruz Lopez
+Número de carnet del estudiante		2020065267
+Número de proyecto programado		1
+Fecha de entrega			05-10-2021
+Estatus de la entrega			Deplorable - Regular
