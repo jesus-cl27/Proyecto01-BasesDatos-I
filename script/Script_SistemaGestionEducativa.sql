@@ -6,7 +6,35 @@ use  SistemaGestionEducativa
 go
 
 --creacion de las tablas
-
+--se agregar algunas tablas
+create table Materia
+(
+	Nombre varchar(50) not null PRIMARY KEY
+);
+go
+create table Grado
+(
+	Numero int not null PRIMARY KEY
+);
+go
+create table GradoMateria
+(
+	NumeroGrado int not null,
+	NombreMateria varchar(50) not null,
+	PRIMARY KEY(NumeroGrado,NombreMateria),
+	FOREIGN KEY(NumeroGrado) REFERENCES Grado(Numero),
+	FOREIGN KEY(NombreMateria) REFERENCES Materia(Nombre),
+);
+go
+create table GradoPeriodo
+(
+	NumeroGrado int not null,
+	NumeroPeriodo int not null,
+	AnnoPeriodo int not null,
+	PRIMARY KEY(NumeroGrado,NumeroPeriodo,AnnoPeriodo),
+	FOREIGN KEY (NumeroGrado) REFERENCES Grado(Numero),
+	FOREIGN KEY (NumeroPeriodo,AnnoPeriodo) REFERENCES PeriodoLectivo(NumeroPeriodo,Anno)
+);
 --Tabla Usuario
 --no permite nulos
 create table Usuario
