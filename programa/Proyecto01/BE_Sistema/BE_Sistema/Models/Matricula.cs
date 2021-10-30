@@ -9,18 +9,17 @@ namespace BE_Sistema.Models
     {
         public Matricula()
         {
-            Cobros = new HashSet<Cobro>();
-            MatriculaGrupos = new HashSet<MatriculaGrupo>();
+            GrupoMatriculas = new HashSet<GrupoMatricula>();
         }
 
-        public int Codigo { get; set; }
-        public long CedulaEstudiante { get; set; }
+        public int NumeroGrado { get; set; }
         public int NumeroPeriodo { get; set; }
         public int AnnoPeriodo { get; set; }
+        public int CedulaEstudiante { get; set; }
+        public string Estado { get; set; }
 
         public virtual Estudiante CedulaEstudianteNavigation { get; set; }
-        public virtual PeriodoLectivo PeriodoLectivo { get; set; }
-        public virtual ICollection<Cobro> Cobros { get; set; }
-        public virtual ICollection<MatriculaGrupo> MatriculaGrupos { get; set; }
+        public virtual GradoPeriodo GradoPeriodo { get; set; }
+        public virtual ICollection<GrupoMatricula> GrupoMatriculas { get; set; }
     }
 }

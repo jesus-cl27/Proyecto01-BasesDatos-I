@@ -18,18 +18,22 @@ namespace BE_Sistema.Models
         }
 
         public virtual DbSet<Cobro> Cobros { get; set; }
-        public virtual DbSet<CuotasPorGrupo> CuotasPorGrupos { get; set; }
-        public virtual DbSet<DetalleCobroMatricula> DetalleCobroMatriculas { get; set; }
-        public virtual DbSet<DetalleCobroPorGrupo> DetalleCobroPorGrupos { get; set; }
         public virtual DbSet<Estudiante> Estudiantes { get; set; }
+        public virtual DbSet<EvaluacionGrupo> EvaluacionGrupos { get; set; }
+        public virtual DbSet<EvaluacionGrupoEstudiante> EvaluacionGrupoEstudiantes { get; set; }
         public virtual DbSet<Factura> Facturas { get; set; }
+        public virtual DbSet<Grado> Grados { get; set; }
+        public virtual DbSet<GradoMaterium> GradoMateria { get; set; }
+        public virtual DbSet<GradoPeriodo> GradoPeriodos { get; set; }
         public virtual DbSet<Grupo> Grupos { get; set; }
+        public virtual DbSet<GrupoMatricula> GrupoMatriculas { get; set; }
         public virtual DbSet<HistoricoSalarial> HistoricoSalarials { get; set; }
+        public virtual DbSet<Materia> Materia { get; set; }
         public virtual DbSet<Matricula> Matriculas { get; set; }
-        public virtual DbSet<MatriculaGrupo> MatriculaGrupos { get; set; }
         public virtual DbSet<Padre> Padres { get; set; }
         public virtual DbSet<PeriodoLectivo> PeriodoLectivos { get; set; }
         public virtual DbSet<Profesor> Profesors { get; set; }
+        public virtual DbSet<TipoEvaluacion> TipoEvaluacions { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -37,7 +41,7 @@ namespace BE_Sistema.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.\\;Database=SistemaGestionEducativa; User Id = sa; Password = Jesus123;");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-UNID0Q0;Database=SistemaGestionEducativa;User Id=sa;Password=Jesus123;");
             }
         }
 
@@ -47,123 +51,51 @@ namespace BE_Sistema.Models
 
             modelBuilder.Entity<Cobro>(entity =>
             {
-                entity.HasKey(e => new { e.Codigo, e.MontoTotal })
-                    .HasName("PK__Cobro__B5F59524C9A6D882");
+                entity.HasKey(e => new { e.CodigoFactura, e.CodigoGrupo, e.TipoCobro })
+                    .HasName("PK__Cobro__D800B6AD8179103B");
 
                 entity.ToTable("Cobro");
 
-                entity.HasIndex(e => e.Codigo, "UQ__Cobro__06370DACF5463265")
-                    .IsUnique();
+                entity.Property(e => e.TipoCobro)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Codigo).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.HasOne(d => d.CedulaEstudianteNavigation)
-                    .WithMany(p => p.Cobros)
-                    .HasPrincipalKey(p => p.Cedula)
-                    .HasForeignKey(d => d.CedulaEstudiante)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cobro__CedulaEst__4E53A1AA");
-
-                entity.HasOne(d => d.CedulaUsuarioNavigation)
-                    .WithMany(p => p.Cobros)
-                    .HasPrincipalKey(p => p.Cedula)
-                    .HasForeignKey(d => d.CedulaUsuario)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cobro__CedulaUsu__503BEA1C");
-
-                entity.HasOne(d => d.CodigoMatriculaNavigation)
-                    .WithMany(p => p.Cobros)
-                    .HasForeignKey(d => d.CodigoMatricula)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cobro__CodigoMat__4F47C5E3");
-
-                entity.HasOne(d => d.PeriodoLectivo)
-                    .WithMany(p => p.Cobros)
-                    .HasForeignKey(d => new { d.NumeroPeriodo, d.AnnoPeriodo })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cobro__51300E55");
-            });
-
-            modelBuilder.Entity<CuotasPorGrupo>(entity =>
-            {
-                entity.HasKey(e => new { e.CodigoCobro, e.CodigoGrupo, e.Consecutivo })
-                    .HasName("PK__CuotasPo__C07136C4FFA57CF6");
-
-                entity.ToTable("CuotasPorGrupo");
-
-                entity.Property(e => e.Estado)
+                entity.Property(e => e.NombreMateria)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Codigo)
-                    .WithMany(p => p.CuotasPorGrupos)
-                    .HasForeignKey(d => new { d.CodigoCobro, d.CodigoGrupo })
+                entity.HasOne(d => d.CodigoFacturaNavigation)
+                    .WithMany(p => p.Cobros)
+                    .HasForeignKey(d => d.CodigoFactura)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CuotasPorGrupo__5CA1C101");
-            });
+                    .HasConstraintName("FK__Cobro__CodigoFac__7A672E12");
 
-            modelBuilder.Entity<DetalleCobroMatricula>(entity =>
-            {
-                entity.HasKey(e => e.CodigoCobro)
-                    .HasName("PK__DetalleC__86E1331643A728C7");
-
-                entity.ToTable("DetalleCobroMatricula");
-
-                entity.Property(e => e.CodigoCobro).ValueGeneratedNever();
-
-                entity.HasOne(d => d.CodigoCobroNavigation)
-                    .WithOne(p => p.DetalleCobroMatricula)
-                    .HasPrincipalKey<Cobro>(p => p.Codigo)
-                    .HasForeignKey<DetalleCobroMatricula>(d => d.CodigoCobro)
+                entity.HasOne(d => d.GrupoMatricula)
+                    .WithMany(p => p.Cobros)
+                    .HasForeignKey(d => new { d.NumeroGrado, d.NumeroPeriodo, d.AnnoPeriodo, d.CedulaEstudiante, d.CodigoGrupo, d.NombreMateria })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DetalleCo__Codig__540C7B00");
-            });
-
-            modelBuilder.Entity<DetalleCobroPorGrupo>(entity =>
-            {
-                entity.HasKey(e => new { e.CodigoCobro, e.CodigoGrupo })
-                    .HasName("PK__DetalleC__A6DAB7CBCA2BE73A");
-
-                entity.ToTable("DetalleCobroPorGrupo");
-
-                entity.HasOne(d => d.CodigoCobroNavigation)
-                    .WithMany(p => p.DetalleCobroPorGrupos)
-                    .HasPrincipalKey(p => p.Codigo)
-                    .HasForeignKey(d => d.CodigoCobro)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DetalleCo__Codig__57DD0BE4");
-
-                entity.HasOne(d => d.CodigoGrupoNavigation)
-                    .WithMany(p => p.DetalleCobroPorGrupos)
-                    .HasForeignKey(d => d.CodigoGrupo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DetalleCo__Codig__58D1301D");
-
-                entity.HasOne(d => d.PeriodoLectivo)
-                    .WithMany(p => p.DetalleCobroPorGrupos)
-                    .HasForeignKey(d => new { d.NumeroPeriodo, d.AnnoPeriodo })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DetalleCobroPorG__59C55456");
+                    .HasConstraintName("FK__Cobro__7B5B524B");
             });
 
             modelBuilder.Entity<Estudiante>(entity =>
             {
-                entity.HasKey(e => new { e.Cedula, e.Nombre })
-                    .HasName("PK__Estudian__43F3C0C509C8B24C");
+                entity.HasKey(e => e.Cedula)
+                    .HasName("PK__Estudian__B4ADFE396F50B0C5");
 
                 entity.ToTable("Estudiante");
 
-                entity.HasIndex(e => e.Cedula, "UQ__Estudian__B4ADFE38D30ECBC1")
+                entity.HasIndex(e => e.Cedula, "UQ__Estudian__B4ADFE386ED49E8C")
                     .IsUnique();
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.Cedula).ValueGeneratedNever();
+
+                entity.Property(e => e.GradoActual)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.GradoActual)
+                entity.Property(e => e.Nombre)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -173,60 +105,160 @@ namespace BE_Sistema.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Usuario)
+                entity.HasOne(d => d.CedulaNavigation)
                     .WithOne(p => p.Estudiante)
-                    .HasForeignKey<Estudiante>(d => new { d.Cedula, d.Nombre })
+                    .HasForeignKey<Estudiante>(d => d.Cedula)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Estudiante__52593CB8");
+                    .HasConstraintName("FK__Estudiant__Cedul__48CFD27E");
 
-                entity.HasOne(d => d.Padre)
+                entity.HasOne(d => d.CedulaPadreNavigation)
                     .WithMany(p => p.Estudiantes)
-                    .HasForeignKey(d => new { d.CedulaPadre, d.NombrePadre })
+                    .HasForeignKey(d => d.CedulaPadre)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Estudiante__534D60F1");
+                    .HasConstraintName("FK__Estudiant__Cedul__49C3F6B7");
+            });
+
+            modelBuilder.Entity<EvaluacionGrupo>(entity =>
+            {
+                entity.HasKey(e => new { e.NumeroPeriodo, e.AnnoPeriodo, e.NombreMateria, e.CodigoGrupo, e.NombreEvaluacion })
+                    .HasName("PK__Evaluaci__47424960FC0F1609");
+
+                entity.ToTable("EvaluacionGrupo");
+
+                entity.Property(e => e.NombreMateria)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreEvaluacion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Peso).HasColumnType("decimal(5, 2)");
+
+                entity.HasOne(d => d.NombreEvaluacionNavigation)
+                    .WithMany(p => p.EvaluacionGrupos)
+                    .HasForeignKey(d => d.NombreEvaluacion)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Evaluacio__Nombr__0A9D95DB");
+
+                entity.HasOne(d => d.Grupo)
+                    .WithMany(p => p.EvaluacionGrupos)
+                    .HasForeignKey(d => new { d.CodigoGrupo, d.NombreMateria, d.NumeroPeriodo, d.AnnoPeriodo })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__EvaluacionGrupo__0B91BA14");
+            });
+
+            modelBuilder.Entity<EvaluacionGrupoEstudiante>(entity =>
+            {
+                entity.HasKey(e => new { e.NumeroPeriodo, e.AnnoPeriodo, e.NombreMateria, e.CodigoGrupo, e.NombreEvaluacion })
+                    .HasName("PK__Evaluaci__47424960C37D8FDE");
+
+                entity.ToTable("EvaluacionGrupoEstudiante");
+
+                entity.Property(e => e.NombreMateria)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NombreEvaluacion)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Nota).HasColumnType("decimal(5, 2)");
+
+                entity.HasOne(d => d.EvaluacionGrupo)
+                    .WithOne(p => p.EvaluacionGrupoEstudiante)
+                    .HasForeignKey<EvaluacionGrupoEstudiante>(d => new { d.NumeroPeriodo, d.AnnoPeriodo, d.NombreMateria, d.CodigoGrupo, d.NombreEvaluacion })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__EvaluacionGrupoE__0E6E26BF");
             });
 
             modelBuilder.Entity<Factura>(entity =>
             {
-                entity.HasKey(e => e.CodigoCobro)
-                    .HasName("PK__Factura__86E133165FDAB6BA");
+                entity.HasKey(e => e.Codigo)
+                    .HasName("PK__Factura__06370DAD05A39CD0");
 
                 entity.ToTable("Factura");
 
-                entity.Property(e => e.CodigoCobro).ValueGeneratedNever();
+                entity.Property(e => e.Codigo).ValueGeneratedNever();
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.HasOne(d => d.CedulaUsuarioNavigation)
                     .WithMany(p => p.Facturas)
-                    .HasPrincipalKey(p => p.Cedula)
                     .HasForeignKey(d => d.CedulaUsuario)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Factura__CedulaU__65370702");
+                    .HasConstraintName("FK__Factura__CedulaU__778AC167");
+            });
 
-                entity.HasOne(d => d.Cobro)
-                    .WithMany(p => p.Facturas)
-                    .HasForeignKey(d => new { d.CodigoCobro, d.MontoTotalCobro })
+            modelBuilder.Entity<Grado>(entity =>
+            {
+                entity.HasKey(e => e.Numero)
+                    .HasName("PK__Grado__7E532BC7599C5350");
+
+                entity.ToTable("Grado");
+
+                entity.Property(e => e.Numero).ValueGeneratedNever();
+            });
+
+            modelBuilder.Entity<GradoMaterium>(entity =>
+            {
+                entity.HasKey(e => new { e.NumeroGrado, e.NombreMateria })
+                    .HasName("PK__GradoMat__56DD2469298ABB6D");
+
+                entity.Property(e => e.NombreMateria)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.NombreMateriaNavigation)
+                    .WithMany(p => p.GradoMateria)
+                    .HasForeignKey(d => d.NombreMateria)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Factura__6442E2C9");
+                    .HasConstraintName("FK__GradoMate__Nombr__29572725");
+
+                entity.HasOne(d => d.NumeroGradoNavigation)
+                    .WithMany(p => p.GradoMateria)
+                    .HasForeignKey(d => d.NumeroGrado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__GradoMate__Numer__286302EC");
+            });
+
+            modelBuilder.Entity<GradoPeriodo>(entity =>
+            {
+                entity.HasKey(e => new { e.NumeroGrado, e.NumeroPeriodo, e.AnnoPeriodo })
+                    .HasName("PK__GradoPer__B50BD57F5265B17F");
+
+                entity.ToTable("GradoPeriodo");
+
+                entity.HasOne(d => d.NumeroGradoNavigation)
+                    .WithMany(p => p.GradoPeriodos)
+                    .HasForeignKey(d => d.NumeroGrado)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__GradoPeri__Numer__36B12243");
+
+                entity.HasOne(d => d.PeriodoLectivo)
+                    .WithMany(p => p.GradoPeriodos)
+                    .HasForeignKey(d => new { d.NumeroPeriodo, d.AnnoPeriodo })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__GradoPeriodo__37A5467C");
             });
 
             modelBuilder.Entity<Grupo>(entity =>
             {
-                entity.HasKey(e => e.Codigo)
-                    .HasName("PK__Grupo__06370DAD9E5A3CDF");
+                entity.HasKey(e => new { e.Codigo, e.NombreMateria, e.NumeroPeriodo, e.Anno })
+                    .HasName("PK__Grupo__A8E33E7C2D5661E9");
 
                 entity.ToTable("Grupo");
 
-                entity.HasIndex(e => e.Codigo, "UQ__Grupo__06370DAC473E22A4")
+                entity.HasIndex(e => e.Codigo, "UQ__Grupo__06370DACAC802D5A")
                     .IsUnique();
 
-                entity.Property(e => e.Materia)
-                    .IsRequired()
+                entity.Property(e => e.Codigo).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.NombreMateria)
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Nombre)
+                entity.Property(e => e.Estado)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -236,95 +268,121 @@ namespace BE_Sistema.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Profesor)
+                entity.HasOne(d => d.CedulaProfesorNavigation)
                     .WithMany(p => p.Grupos)
-                    .HasForeignKey(d => new { d.CedulaProfesor, d.NombreProfesor })
+                    .HasForeignKey(d => d.CedulaProfesor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Grupo__68487DD7");
+                    .HasConstraintName("FK__Grupo__CedulaPro__5EBF139D");
+
+                entity.HasOne(d => d.NombreMateriaNavigation)
+                    .WithMany(p => p.Grupos)
+                    .HasForeignKey(d => d.NombreMateria)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Grupo__NombreMat__5CD6CB2B");
 
                 entity.HasOne(d => d.PeriodoLectivo)
                     .WithMany(p => p.Grupos)
                     .HasForeignKey(d => new { d.NumeroPeriodo, d.Anno })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Grupo__6754599E");
+                    .HasConstraintName("FK__Grupo__5DCAEF64");
+            });
+
+            modelBuilder.Entity<GrupoMatricula>(entity =>
+            {
+                entity.HasKey(e => new { e.NumeroGrado, e.NumeroPeriodo, e.AnnoPeriodo, e.CedulaEstudiante, e.CodigoGrupo, e.NombreMateria })
+                    .HasName("PK__GrupoMat__67A8DBABF449608B");
+
+                entity.ToTable("GrupoMatricula");
+
+                entity.Property(e => e.NombreMateria)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CodigoGrupoNavigation)
+                    .WithMany(p => p.GrupoMatriculas)
+                    .HasPrincipalKey(p => p.Codigo)
+                    .HasForeignKey(d => d.CodigoGrupo)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__GrupoMatr__Codig__6D0D32F4");
+
+                entity.HasOne(d => d.Matricula)
+                    .WithMany(p => p.GrupoMatriculas)
+                    .HasForeignKey(d => new { d.NumeroGrado, d.NumeroPeriodo, d.AnnoPeriodo, d.CedulaEstudiante })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__GrupoMatricula__6C190EBB");
             });
 
             modelBuilder.Entity<HistoricoSalarial>(entity =>
             {
-                entity.HasKey(e => new { e.CedulaProfesor, e.NombreProfesor })
-                    .HasName("PK__Historic__7728B9C85455A646");
+                entity.HasKey(e => new { e.CedulaProfesor, e.FechaInicio })
+                    .HasName("PK__Historic__95FE567735D25388");
 
                 entity.ToTable("HistoricoSalarial");
 
-                entity.Property(e => e.NombreProfesor)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("NombrePRofesor");
+                entity.Property(e => e.FechaInicio).HasColumnType("date");
 
                 entity.Property(e => e.FechaFin).HasColumnType("date");
 
-                entity.Property(e => e.FechaInicio).HasColumnType("date");
-
-                entity.HasOne(d => d.Profesor)
-                    .WithOne(p => p.HistoricoSalarial)
-                    .HasForeignKey<HistoricoSalarial>(d => new { d.CedulaProfesor, d.NombreProfesor })
+                entity.HasOne(d => d.CedulaProfesorNavigation)
+                    .WithMany(p => p.HistoricoSalarials)
+                    .HasForeignKey(d => d.CedulaProfesor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__HistoricoSalaria__440B1D61");
+                    .HasConstraintName("FK__Historico__Cedul__3F466844");
+            });
+
+            modelBuilder.Entity<Materia>(entity =>
+            {
+                entity.HasKey(e => e.Nombre)
+                    .HasName("PK__Materia__75E3EFCE13520FA3");
+
+                entity.Property(e => e.Nombre)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Matricula>(entity =>
             {
-                entity.HasKey(e => e.Codigo)
-                    .HasName("PK__Matricul__06370DADC42917D6");
+                entity.HasKey(e => new { e.NumeroGrado, e.NumeroPeriodo, e.AnnoPeriodo, e.CedulaEstudiante })
+                    .HasName("PK__Matricul__FDBAEDB537EA63E0");
 
                 entity.ToTable("Matricula");
 
-                entity.HasIndex(e => e.Codigo, "UQ__Matricul__06370DAC766BE97C")
-                    .IsUnique();
+                entity.Property(e => e.Estado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.HasOne(d => d.CedulaEstudianteNavigation)
                     .WithMany(p => p.Matriculas)
-                    .HasPrincipalKey(p => p.Cedula)
                     .HasForeignKey(d => d.CedulaEstudiante)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Matricula__Cedul__6E01572D");
+                    .HasConstraintName("FK__Matricula__Cedul__5441852A");
 
-                entity.HasOne(d => d.PeriodoLectivo)
+                entity.HasOne(d => d.GradoPeriodo)
                     .WithMany(p => p.Matriculas)
-                    .HasForeignKey(d => new { d.NumeroPeriodo, d.AnnoPeriodo })
+                    .HasForeignKey(d => new { d.NumeroGrado, d.NumeroPeriodo, d.AnnoPeriodo })
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Matricula__6EF57B66");
-            });
-
-            modelBuilder.Entity<MatriculaGrupo>(entity =>
-            {
-                entity.HasKey(e => new { e.CodigoMatricula, e.CodigoGrupo })
-                    .HasName("PK__Matricul__6DCBE2C8F3F0C9B7");
-
-                entity.HasOne(d => d.CodigoGrupoNavigation)
-                    .WithMany(p => p.MatriculaGrupos)
-                    .HasForeignKey(d => d.CodigoGrupo)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Matricula__Codig__1EA48E88");
-
-                entity.HasOne(d => d.CodigoMatriculaNavigation)
-                    .WithMany(p => p.MatriculaGrupos)
-                    .HasForeignKey(d => d.CodigoMatricula)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Matricula__Codig__1DB06A4F");
+                    .HasConstraintName("FK__Matricula__5535A963");
             });
 
             modelBuilder.Entity<Padre>(entity =>
             {
-                entity.HasKey(e => new { e.Cedula, e.Nombre })
-                    .HasName("PK__Padre__43F3C0C56CB9F762");
+                entity.HasKey(e => e.Cedula)
+                    .HasName("PK__Padre__B4ADFE3923DDC52A");
 
                 entity.ToTable("Padre");
 
-                entity.HasIndex(e => e.Cedula, "UQ__Padre__B4ADFE3848EA50DC")
+                entity.HasIndex(e => e.Cedula, "UQ__Padre__B4ADFE382A036EC0")
                     .IsUnique();
 
+                entity.Property(e => e.Cedula).ValueGeneratedNever();
+
                 entity.Property(e => e.Nombre)
+                    .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
@@ -338,17 +396,17 @@ namespace BE_Sistema.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Usuario)
+                entity.HasOne(d => d.CedulaNavigation)
                     .WithOne(p => p.Padre)
-                    .HasForeignKey<Padre>(d => new { d.Cedula, d.Nombre })
+                    .HasForeignKey<Padre>(d => d.Cedula)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Padre__48CFD27E");
+                    .HasConstraintName("FK__Padre__Cedula__440B1D61");
             });
 
             modelBuilder.Entity<PeriodoLectivo>(entity =>
             {
                 entity.HasKey(e => new { e.NumeroPeriodo, e.Anno })
-                    .HasName("PK__PeriodoL__72E4119A6F310228");
+                    .HasName("PK__PeriodoL__72E4119A18C68394");
 
                 entity.ToTable("PeriodoLectivo");
 
@@ -364,38 +422,51 @@ namespace BE_Sistema.Models
 
             modelBuilder.Entity<Profesor>(entity =>
             {
-                entity.HasKey(e => new { e.Cedula, e.Nombre })
-                    .HasName("PK__Profesor__43F3C0C5B6E1FA3C");
+                entity.HasKey(e => e.Cedula)
+                    .HasName("PK__Profesor__B4ADFE39623D3506");
 
                 entity.ToTable("Profesor");
 
-                entity.HasIndex(e => e.Cedula, "UQ__Profesor__B4ADFE38B1381BAE")
+                entity.HasIndex(e => e.Cedula, "UQ__Profesor__B4ADFE3805DB4491")
                     .IsUnique();
+
+                entity.Property(e => e.Cedula).ValueGeneratedNever();
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.CedulaNavigation)
+                    .WithOne(p => p.Profesor)
+                    .HasForeignKey<Profesor>(d => d.Cedula)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Profesor__Cedula__3B75D760");
+            });
+
+            modelBuilder.Entity<TipoEvaluacion>(entity =>
+            {
+                entity.HasKey(e => e.Nombre)
+                    .HasName("PK__TipoEval__75E3EFCEE3D42B38");
+
+                entity.ToTable("TipoEvaluacion");
 
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Usuario)
-                    .WithOne(p => p.Profesor)
-                    .HasForeignKey<Profesor>(d => new { d.Cedula, d.Nombre })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Profesor__403A8C7D");
             });
 
             modelBuilder.Entity<Usuario>(entity =>
             {
-                entity.HasKey(e => new { e.Cedula, e.NombrePila })
-                    .HasName("PK__Usuario__FFF39CD8D8A26E19");
+                entity.HasKey(e => e.Cedula)
+                    .HasName("PK__Usuario__B4ADFE391EF983A6");
 
                 entity.ToTable("Usuario");
 
-                entity.HasIndex(e => e.Cedula, "UQ__Usuario__B4ADFE38B21E6E92")
+                entity.HasIndex(e => e.Cedula, "UQ__Usuario__B4ADFE384C331F2E")
                     .IsUnique();
 
-                entity.Property(e => e.NombrePila)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Cedula).ValueGeneratedNever();
 
                 entity.Property(e => e.Apellido1)
                     .IsRequired()
@@ -410,6 +481,11 @@ namespace BE_Sistema.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaNacimiento).HasColumnType("date");
+
+                entity.Property(e => e.NombrePila)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Provincia)
                     .IsRequired()

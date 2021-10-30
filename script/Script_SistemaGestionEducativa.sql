@@ -141,11 +141,11 @@ create table Grupo
 (
 	Codigo int IDENTITY(1,1) not null UNIQUE, --autoincrementar a partir de 1, incrementando en 1
 	NombreMateria varchar(50) not null,
+	NumeroPeriodo int not null,
+	Anno int not null,
 	CedulaProfesor int not null,
 	NombreProfesor varchar(50) not null,
 	Cupo int not null,
-	NumeroPeriodo int not null,
-	Anno int not null,
 	Estado varchar(50) not null,
 	CostoMensualidad int not null,
 	CostoMatricula int not null,
@@ -153,11 +153,10 @@ create table Grupo
 	FOREIGN KEY (NombreMateria) REFERENCES Materia(Nombre),
 	FOREIGN KEY (NumeroPeriodo,Anno) REFERENCES PeriodoLectivo(NumeroPeriodo,Anno),  --llaves foraneas
 	FOREIGN KEY (CedulaProfesor) REFERENCES Profesor(Cedula),  --llaves foraneas
-	FOREIGN KEY (NombreMateria) REFERENCES Materia(Nombre),
 	CONSTRAINT chk_Cupo CHECK (Cupo >=0),  --validar que el cupo sea mayor o igual a cero
 );
 go
-
+--drop table Grupo;
 --tabla Matricula
 --no permite nulos
 create table Matricula
@@ -174,6 +173,7 @@ create table Matricula
 go
 create table GrupoMatricula
 (
+	
 	NumeroGrado int not null,
 	NumeroPeriodo int not null,
 	AnnoPeriodo int not null,
@@ -183,10 +183,11 @@ create table GrupoMatricula
 	Estado varchar(50) not null,
 	PRIMARY KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria),   --llave primaria
 	FOREIGN KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante) REFERENCES Matricula(NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante),
-	FOREIGN KEY (CodigoGrupo,NombreMateria) REFERENCES Grupo(Codigo,NombreMateria),
-
+	FOREIGN KEY (CodigoGrupo) REFERENCES Grupo(Codigo),
 );
 go
+--alter table GrupoMatricula add foreign key (NombreMateria) references Grupo(NombreMateria)
+
 create table EvaluacionGrupo
 (
 	NumeroPeriodo int not null,
@@ -194,9 +195,49 @@ create table EvaluacionGrupo
 	NombreMateria varchar(50) not null,
 	CodigoGrupo int not null,
 	NombreEvaluacion varchar(50) not null,
-	Tipo varchar(50) not null,
 	Peso decimal(5,2) not null,
 	PRIMARY KEY (NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion),
+	FOREIGN KEY (NombreEvaluacion) REFERENCES TipoEvaluacion(Nombre),
 	FOREIGN KEY (CodigoGrupo,NombreMateria,NumeroPeriodo,AnnoPeriodo) REFERENCES Grupo(Codigo,NombreMateria,NumeroPeriodo,Anno),
 );
 go
+create table EvaluacionGrupoEstudiante
+(
+	NumeroPeriodo int not null,
+	AnnoPeriodo int not null,
+	NombreMateria varchar(50) not null,
+	CodigoGrupo int not null,
+	NombreEvaluacion varchar(50) not null,
+	Nota decimal(5,2) not null,
+	PRIMARY KEY (NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion),
+	FOREIGN KEY (NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion) REFERENCES EvaluacionGrupo(NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion),
+);
+go
+create table Factura
+(
+	Codigo int not null,
+	CedulaUsuario int not null,
+	MontoTotal int not null,
+	MontoTotalIva int not null,
+	FechaCreacion datetime not null,
+	PRIMARY KEY(Codigo),
+	FOREIGN KEY(CedulaUsuario) REFERENCES Usuario(Cedula),
+);
+go
+create table Cobro
+(
+	CodigoFactura int not null,
+	NumeroGrado int not null,
+	NumeroPeriodo int not null,
+	AnnoPeriodo int not null,
+	CedulaEstudiante int not null,
+	CodigoGrupo int not null,
+	NombreMateria varchar(50) not null,
+	TipoCobro varchar(50) not null,
+	Monto int not null,
+	Estado bit not null,
+	PRIMARY KEY(CodigoFactura,CodigoGrupo,TipoCobro),
+	FOREIGN KEY (CodigoFactura) REFERENCES Factura(Codigo),
+	FOREIGN KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria) REFERENCES GrupoMatricula(NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria),
+	constraint chk_TipoCobro check (TipoCobro = 'mensualidad' or TipoCobro = 'matricula')
+);

@@ -7,12 +7,18 @@ namespace BE_Sistema.Models
 {
     public partial class Factura
     {
-        public int CodigoCobro { get; set; }
-        public long CedulaUsuario { get; set; }
-        public int MontoTotalCobro { get; set; }
+        public Factura()
+        {
+            Cobros = new HashSet<Cobro>();
+        }
+
+        public int Codigo { get; set; }
+        public int CedulaUsuario { get; set; }
+        public int MontoTotal { get; set; }
+        public int MontoTotalIva { get; set; }
         public DateTime FechaCreacion { get; set; }
 
         public virtual Usuario CedulaUsuarioNavigation { get; set; }
-        public virtual Cobro Cobro { get; set; }
+        public virtual ICollection<Cobro> Cobros { get; set; }
     }
 }

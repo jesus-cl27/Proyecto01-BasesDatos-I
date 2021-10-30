@@ -9,11 +9,10 @@ namespace BE_Sistema.Models
     {
         public Usuario()
         {
-            Cobros = new HashSet<Cobro>();
             Facturas = new HashSet<Factura>();
         }
 
-        public long Cedula { get; set; }
+        public int Cedula { get; set; }
         public string NombrePila { get; set; }
         public string Apellido1 { get; set; }
         public string Apellido2 { get; set; }
@@ -29,7 +28,6 @@ namespace BE_Sistema.Models
         public virtual Estudiante Estudiante { get; set; }
         public virtual Padre Padre { get; set; }
         public virtual Profesor Profesor { get; set; }
-        public virtual ICollection<Cobro> Cobros { get; set; }
         public virtual ICollection<Factura> Facturas { get; set; }
     }
 }

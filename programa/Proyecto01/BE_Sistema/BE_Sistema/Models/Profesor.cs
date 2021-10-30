@@ -10,14 +10,15 @@ namespace BE_Sistema.Models
         public Profesor()
         {
             Grupos = new HashSet<Grupo>();
+            HistoricoSalarials = new HashSet<HistoricoSalarial>();
         }
 
-        public long Cedula { get; set; }
+        public int Cedula { get; set; }
         public string Nombre { get; set; }
         public long Salario { get; set; }
 
-        public virtual Usuario Usuario { get; set; }
-        public virtual HistoricoSalarial HistoricoSalarial { get; set; }
+        public virtual Usuario CedulaNavigation { get; set; }
         public virtual ICollection<Grupo> Grupos { get; set; }
+        public virtual ICollection<HistoricoSalarial> HistoricoSalarials { get; set; }
     }
 }
