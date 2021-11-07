@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace BE_Sistema.Models
 {
-    public partial class GradoMaterium
+    public partial class GradoMateria
     {
         public int NumeroGrado { get; set; }
         public string NombreMateria { get; set; }

@@ -9,13 +9,13 @@ namespace BE_Sistema.Models
     {
         public Materia()
         {
-            GradoMateria = new HashSet<GradoMaterium>();
+            GradoMateria = new HashSet<GradoMateria>();
             Grupos = new HashSet<Grupo>();
         }
 
         public string Nombre { get; set; }
 
-        public virtual ICollection<GradoMaterium> GradoMateria { get; set; }
+        public virtual ICollection<GradoMateria> GradoMateria { get; set; }
         public virtual ICollection<Grupo> Grupos { get; set; }
     }
 }

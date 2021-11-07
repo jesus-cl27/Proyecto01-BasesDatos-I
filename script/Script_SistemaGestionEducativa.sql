@@ -55,6 +55,7 @@ create table Usuario
 	CONSTRAINT chk_Telefono CHECK(Telefono >= 10000000 and Telefono <= 99999999)  ---validacion de un numero de telefono de 8 digitos
 );
 go
+alter table Usuario add Password varchar(20) not null;
 --tabla PeriodoLectivo
 --no permite nulos
 create table PeriodoLectivo
@@ -241,3 +242,66 @@ create table Cobro
 	FOREIGN KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria) REFERENCES GrupoMatricula(NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria),
 	constraint chk_TipoCobro check (TipoCobro = 'mensualidad' or TipoCobro = 'matricula')
 );
+-- procedimientos almacenados
+go
+create procedure dbo.Agregar_Usuario_Padre
+	@Cedula int,
+	@NombrePila varchar(50),
+	@Ap1 varchar(50),
+	@Ap2 varchar(50),
+	@Rol varchar(20),
+	@Sexo varchar(1),
+	@FechaNac date,
+	@Edad int,
+	@Provincia varchar(50),
+	@Residencia varchar(50),
+	@Telefono int,
+	@FechaCreacion datetime,
+	@Password varchar(20),
+	@Profesion varchar(50),
+	@NombreConyugue varchar(50),
+	@TelefonoConyugue int
+as
+begin
+	insert into dbo.Usuario values(@Cedula,@NombrePila,@Ap1,@Ap2,@Rol,@Sexo,@FechaNac,@Edad,@Provincia,@Residencia,@Telefono,@FechaCreacion,@Password)
+	insert into dbo.Padre values(@Cedula,@NombrePila,@Profesion,@NombreConyugue,@TelefonoConyugue)
+end
+go
+execute dbo.Agregar_Usuario_Padre
+	@Cedula = 701110283,
+	@NombrePila ='Carlos',
+	@Ap1 = 'Cruz',
+	@Ap2 = 'Mesen',
+	@Rol ='Padre',
+	@Sexo ='M',
+	@FechaNac = '1973-10-16',
+	@Edad = 48,
+	@Provincia = 'Limon',
+	@Residencia = 'Siquirres',
+	@Telefono = 60112211,
+	@FechaCreacion = '2021-11-06',
+	@Password = 'Cruz16',
+	@Profesion = 'Administrador',
+	@NombreConyugue = 'Maria',
+	@TelefonoConyugue = 87996655;
+go
+execute dbo.Agregar_Usuario_Padre
+	@Cedula = 701370116,
+	@NombrePila ='Maria',
+	@Ap1 = 'Lopez',
+	@Ap2 = 'Anchia',
+	@Rol ='Padre',
+	@Sexo ='F',
+	@FechaNac = '1980-05-06',
+	@Edad = 40,
+	@Provincia = 'Limon',
+	@Residencia = 'Siquirres',
+	@Telefono = 87996655,
+	@FechaCreacion = '2021-11-07',
+	@Password = 'Cruz16',
+	@Profesion = 'Abogada',
+	@NombreConyugue = 'Carlos',
+	@TelefonoConyugue = 60112277;
+--drop procedure Agregar_Usuario_Padre
+--update Usuario set Password = 'Maria06'  from Usuario where Cedula = 701370116
+--select * from Padre

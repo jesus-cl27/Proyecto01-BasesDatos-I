@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BE_Sistema.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,26 @@ namespace BE_Sistema.Controllers
     [ApiController]
     public class SistemaController : ControllerBase
     {
+        private readonly SistemaGestionEducativaContext _context;
+        public SistemaController(SistemaGestionEducativaContext context)
+        {
+            _context = context;
+        }
+
         // GET: api/<SistemaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                var listUsuarios = await _context.Usuarios.ToListAsync();
+                return Ok(listUsuarios);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET api/<SistemaController>/5

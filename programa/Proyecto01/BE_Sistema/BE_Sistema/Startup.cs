@@ -1,7 +1,9 @@
+using BE_Sistema.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +34,14 @@ namespace BE_Sistema
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BE_Sistema", Version = "v1" });
             });
+            //serivicios de conexion a la base de datos.
+            services.AddDbContext<SistemaGestionEducativaContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ConexionSql")));
+            //para no tener problemas de acceso en el frontEnd
+            services.AddCors(options => options.AddPolicy("AllowWebApp",
+                builder => builder.AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +53,7 @@ namespace BE_Sistema
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BE_Sistema v1"));
             }
+            app.UseCors("AllowWebApp");
 
             app.UseHttpsRedirection();
 

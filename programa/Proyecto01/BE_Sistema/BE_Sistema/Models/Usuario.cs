@@ -25,6 +25,8 @@ namespace BE_Sistema.Models
         public int Telefono { get; set; }
         public DateTime FechaCreacion { get; set; }
 
+        public String Password { get; set; }
+
         public virtual Estudiante Estudiante { get; set; }
         public virtual Padre Padre { get; set; }
         public virtual Profesor Profesor { get; set; }

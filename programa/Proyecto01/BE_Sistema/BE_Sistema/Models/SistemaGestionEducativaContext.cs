@@ -23,7 +23,7 @@ namespace BE_Sistema.Models
         public virtual DbSet<EvaluacionGrupoEstudiante> EvaluacionGrupoEstudiantes { get; set; }
         public virtual DbSet<Factura> Facturas { get; set; }
         public virtual DbSet<Grado> Grados { get; set; }
-        public virtual DbSet<GradoMaterium> GradoMateria { get; set; }
+        public virtual DbSet<GradoMateria> GradoMateria { get; set; }
         public virtual DbSet<GradoPeriodo> GradoPeriodos { get; set; }
         public virtual DbSet<Grupo> Grupos { get; set; }
         public virtual DbSet<GrupoMatricula> GrupoMatriculas { get; set; }
@@ -200,7 +200,7 @@ namespace BE_Sistema.Models
                 entity.Property(e => e.Numero).ValueGeneratedNever();
             });
 
-            modelBuilder.Entity<GradoMaterium>(entity =>
+            modelBuilder.Entity<GradoMateria>(entity =>
             {
                 entity.HasKey(e => new { e.NumeroGrado, e.NombreMateria })
                     .HasName("PK__GradoMat__56DD2469298ABB6D");
