@@ -56,6 +56,7 @@ create table Usuario
 );
 go
 alter table Usuario add Password varchar(20) not null;
+ALTER TABLE Usuario ADD CONSTRAINT DF_Usuario DEFAULT GETDATE() FOR FechaCreacion
 --tabla PeriodoLectivo
 --no permite nulos
 create table PeriodoLectivo
@@ -256,14 +257,14 @@ create procedure dbo.Agregar_Usuario_Padre
 	@Provincia varchar(50),
 	@Residencia varchar(50),
 	@Telefono int,
-	@FechaCreacion datetime,
+	--@FechaCreacion datetime,
 	@Password varchar(20),
 	@Profesion varchar(50),
 	@NombreConyugue varchar(50),
 	@TelefonoConyugue int
 as
 begin
-	insert into dbo.Usuario values(@Cedula,@NombrePila,@Ap1,@Ap2,@Rol,@Sexo,@FechaNac,@Edad,@Provincia,@Residencia,@Telefono,@FechaCreacion,@Password)
+	insert into dbo.Usuario(Cedula,NombrePila,Apellido1,Apellido2,Rol,Sexo,FechaNacimiento,Edad,Provincia,Residencia,Telefono,Password) values(@Cedula,@NombrePila,@Ap1,@Ap2,@Rol,@Sexo,@FechaNac,@Edad,@Provincia,@Residencia,@Telefono,@Password)
 	insert into dbo.Padre values(@Cedula,@NombrePila,@Profesion,@NombreConyugue,@TelefonoConyugue)
 end
 go
@@ -279,7 +280,7 @@ execute dbo.Agregar_Usuario_Padre
 	@Provincia = 'Limon',
 	@Residencia = 'Siquirres',
 	@Telefono = 60112211,
-	@FechaCreacion = '2021-11-06',
+	--@FechaCreacion = '2021-11-06',
 	@Password = 'Cruz16',
 	@Profesion = 'Administrador',
 	@NombreConyugue = 'Maria',
@@ -305,3 +306,22 @@ execute dbo.Agregar_Usuario_Padre
 --drop procedure Agregar_Usuario_Padre
 --update Usuario set Password = 'Maria06'  from Usuario where Cedula = 701370116
 --select * from Padre
+execute dbo.Agregar_Usuario_Padre
+	@Cedula = 701110222,
+	@NombrePila ='Cristiano',
+	@Ap1 = 'Ronaldo',
+	@Ap2 = 'Messi',
+	@Rol ='Padre',
+	@Sexo ='M',
+	@FechaNac = '1986-11-23',
+	@Edad = 35,
+	@Provincia = 'Alajuela',
+	@Residencia = 'Atenas',
+	@Telefono = 85456732,
+	--@FechaCreacion = '2021-11-06',
+	@Password = 'cr71000',
+	@Profesion = 'Futbolista',
+	@NombreConyugue = 'Ines',
+	@TelefonoConyugue = 89001267;
+go
+select * from Usuario

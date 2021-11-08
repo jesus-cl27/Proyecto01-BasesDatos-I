@@ -11,7 +11,6 @@ namespace BE_Sistema.Models
         {
             Estudiantes = new HashSet<Estudiante>();
         }
-
         public int Cedula { get; set; }
         public string Nombre { get; set; }
         public string ProfesionOficio { get; set; }
@@ -20,5 +19,6 @@ namespace BE_Sistema.Models
 
         public virtual Usuario CedulaNavigation { get; set; }
         public virtual ICollection<Estudiante> Estudiantes { get; set; }
+
     }
 }
