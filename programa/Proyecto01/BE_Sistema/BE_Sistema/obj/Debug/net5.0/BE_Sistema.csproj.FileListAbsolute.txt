@@ -41,7 +41,6 @@ C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Pr
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\System.Configuration.ConfigurationManager.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
@@ -59,3 +58,9 @@ C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Pr
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.pdb
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Jesus\OneDrive\II Semestre Tec 2021(IV)\Bases de Datos G60\Proyectos\Proyecto01-BasesDatos-I\programa\Proyecto01\BE_Sistema\BE_Sistema\bin\Debug\net5.0\Microsoft.Extensions.Identity.Stores.dll

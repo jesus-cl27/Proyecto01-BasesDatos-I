@@ -1,7 +1,9 @@
 using BE_Sistema.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +15,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BE_Sistema
 {
@@ -37,6 +42,24 @@ namespace BE_Sistema
             //serivicios de conexion a la base de datos.
             services.AddDbContext<SistemaGestionEducativaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ConexionSql")));
+
+            services.AddIdentity<AppUser, IdentityRole>()
+                .AddEntityFrameworkStores<SistemaGestionEducativaContext>()
+                .AddDefaultTokenProviders();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "yourdomain.com",
+                    ValidAudience = "yourdomain.com",
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["Llave_super_secreta"])),
+                    ClockSkew = TimeSpan.Zero
+                });
             //para no tener problemas de acceso en el frontEnd
             services.AddCors(options => options.AddPolicy("AllowWebApp",
                 builder => builder.AllowAnyOrigin()
@@ -54,6 +77,8 @@ namespace BE_Sistema
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BE_Sistema v1"));
             }
             app.UseCors("AllowWebApp");
+
+            app.UseAuthentication();
 
             app.UseHttpsRedirection();
 

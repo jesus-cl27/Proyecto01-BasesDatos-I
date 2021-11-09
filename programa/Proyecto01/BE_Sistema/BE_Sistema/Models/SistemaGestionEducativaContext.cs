@@ -1,12 +1,17 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 #nullable disable
 
 namespace BE_Sistema.Models
 {
-    public partial class SistemaGestionEducativaContext : DbContext
+    public partial class SistemaGestionEducativaContext : DbContext//IdentityDbContext<AppUser>//
     {
         public SistemaGestionEducativaContext()
         {
