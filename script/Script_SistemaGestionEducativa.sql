@@ -122,6 +122,8 @@ execute dbo.AgregarTipoEvaluacion 'Quiz';
 go
 execute dbo.AgregarTipoEvaluacion 'Examen';
 go
+execute dbo.AgregarTipoEvaluacion 'Asistencia';
+go
 
 --Tabla Usuario
 --no permite nulos
@@ -329,16 +331,20 @@ create table EvaluacionGrupo
 go
 create table EvaluacionGrupoEstudiante
 (
+	NumeroGrado int not null,
 	NumeroPeriodo int not null,
 	AnnoPeriodo int not null,
 	NombreMateria varchar(50) not null,
 	CodigoGrupo int not null,
+	CedulaEstudiante int not null,
 	NombreEvaluacion varchar(50) not null,
 	Nota decimal(5,2) not null,
-	PRIMARY KEY (NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion),
-	FOREIGN KEY (NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion) REFERENCES EvaluacionGrupo(NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,NombreEvaluacion),
+	PRIMARY KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,NombreMateria,CodigoGrupo,CedulaEstudiante,NombreEvaluacion),
+	FOREIGN KEY (NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria) REFERENCES GrupoMatricula(NumeroGrado,NumeroPeriodo,AnnoPeriodo,CedulaEstudiante,CodigoGrupo,NombreMateria),
+	FOREIGN KEY (NombreEvaluacion) REFERENCES TipoEvaluacion(Nombre),
 );
 go
+
 create table Factura
 (
 	Codigo int not null,
@@ -585,6 +591,10 @@ execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',60,'Proyecto',12.5;
 go
 execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',60,'Examen',40;
 go
+execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',60,'Tarea',35;
+go
+delete EvaluacionGrupo where CodigoGrupo  = 60 and NombreEvaluacion = 'Tarea'
+go
 execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',61,'Proyecto',50;
 go
 execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',61,'Examen',30;
@@ -593,21 +603,23 @@ execute dbo.Agregar_EvaluacionGrupo 1,2020,'Matematicas',61,'Tarea',20;
 go
 create procedure dbo.Agregar_EvaluacionGrupoEstudiante
 (
+	@numGrado int,
 	@numPeriodo int,
 	@AnnoPeriodo int,
 	@Materia varchar(50),
 	@CodigoGrupo int,
+	@estudiante int,
 	@Evaluacion varchar(50),
 	@Nota decimal(5,2)
 )
 as
 begin
-	insert into EvaluacionGrupoEstudiante values(@numPeriodo,@AnnoPeriodo,@Materia,@CodigoGrupo,@Evaluacion,@Nota)
+	insert into EvaluacionGrupoEstudiante values(@numGrado,@numPeriodo,@AnnoPeriodo,@Materia,@CodigoGrupo,@estudiante,@Evaluacion,@Nota)
 end
 go
-execute dbo.Agregar_EvaluacionGrupoEstudiante 1,2020,'Matematicas',61,'Tarea',80;
+execute dbo.Agregar_EvaluacionGrupoEstudiante 1,1,2020,'Matematicas',60,202900301,'Tarea',80;
 go
-execute dbo.Agregar_EvaluacionGrupoEstudiante 1,2020,'Matematicas',61,'Proyecto',61.6;
+execute dbo.Agregar_EvaluacionGrupoEstudiante 1,1,2020,'Matematicas',60,202900301,'Proyecto',61.6;
 go
 
 create procedure dbo.AgregarMatricula
