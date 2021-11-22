@@ -18,8 +18,22 @@ return
 );
 select * from CantEstudiantesPorPeriodo(1,2020);
 --++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
+--Cantidad de grupos por periodo
+create view CantidadGruposPeriodo
+as
+select P.NumeroPeriodo,P.Anno,count(G.Codigo) as CantidadGrupos
+from  PeriodoLectivo P
+left join Grupo G
+on P.NumeroPeriodo = G.NumeroPeriodo and P.Anno = G.Anno
+group by P.NumeroPeriodo,P.Anno
+go
+----------------------------------------------------------
+--cantidad de grupos por estudiante por periodo, seleccionar periodo
+select p.NumeroPeriodo,p.Anno,e.Cedula,count(g.Codigo) as CantGrupos
+from Grupo g,PeriodoLectivo  p
+inner join GrupoMatricula as gm
+on p.NumeroPeriodo = gm.NumeroPeriodo and p.Anno = gm.AnnoPeriodo
+go
 select * from Estudiante
 execute Agregar_Usuario_Estudiante 702340988,'Jose','Rodriguez','Guevara','Estudiante','M','2001-12-20',20,'Puntarenas','Golfito',70234590,'Rodri20',701110222,1
 go
@@ -42,3 +56,5 @@ go
 select * from Matricula
 go
 select * from Grupo
+go
+select * from PeriodoLectivo
