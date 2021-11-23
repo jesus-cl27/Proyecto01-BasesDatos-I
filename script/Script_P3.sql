@@ -58,3 +58,36 @@ go
 select * from Grupo
 go
 select * from PeriodoLectivo
+go
+-----------------------------
+create procedure CierrePeriodoGrupo @numPeriodo int, @anno int, @materia varchar(50), @codigoGrupo int
+as
+begin
+declare @cantEstudiantes int, @cantEvaluaciones int,@total int, @totalRegistros int
+set @cantEstudiantes = (select count(*) from (select distinct CedulaEstudiante
+											from GrupoMatricula
+											where NumeroPeriodo = @numPeriodo and AnnoPeriodo = @anno and NombreMateria = @materia and CodigoGrupo = @codigoGrupo) A)
+print @cantEstudiantes
+set @cantEvaluaciones = (select count(*) from EvaluacionGrupo
+						where NumeroPeriodo = @numPeriodo and AnnoPeriodo = @anno and NombreMateria = @materia and CodigoGrupo = @codigoGrupo)
+print @cantEvaluaciones
+set @totalRegistros = (select count(*) from EvaluacionGrupoEstudiante
+						where NumeroPeriodo = @numPeriodo and AnnoPeriodo = @anno and NombreMateria = @materia and CodigoGrupo = @codigoGrupo)
+print @totalRegistros
+set @total = @cantEstudiantes * @cantEvaluaciones
+print @total
+	if @total = @totalRegistros
+	begin 
+	update Grupo set Estado = 'cerrado' where NumeroPeriodo = @numPeriodo and Anno = @anno and NombreMateria = @materia and Codigo = @codigoGrupo
+	print 'grupo cerrado con exito'
+	end
+	else
+	begin
+	print 'el grupo no se puede cerrar'
+	end
+end
+go
+
+exec  CierrePeriodoGrupo 1,2020,'Matematicas',61
+drop procedure CierrePeriodoGrupo
+
